@@ -7,6 +7,13 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda
 // APIGatewayProxyResult: Tipo de dado da resposta
 // Quando a APIGateway invoca a minha função, ela passa alguns parâmetros: event, context e callback
 export async function handler(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
+
+    // Tracing Distribuído
+    // ID da requisição
+    const lambdaRequestId = context.awsRequestId;
+    // ID da requisição
+    const apiRequestId = event.requestContext.requestId;
+    // Método HTTP da requisição
     const httpMethod = event.httpMethod;
 
     if (event.resource === "/products") {
