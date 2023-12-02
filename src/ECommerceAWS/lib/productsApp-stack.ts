@@ -17,15 +17,17 @@ export class ProductsAppStack extends cdk.Stack {
         super(scope, id, props);
 
         // Função lambda que busca os produtos
-        // FunctionName: Nome da função
-        // Entry: Arquivo que contém a função
-        // Handler: Função que será executada
-        // MemorySize: Tamanho da memória
-        // Timeout: Tempo limite de execução
-        // Bundling: Configurações de minificação e source map
+        // runtime: Versão do Node.js
+        // functionName: Nome da função
+        // entry: Arquivo que contém a função
+        // handler: Função que será executada
+        // memorySize: Tamanho da memória
+        // timeout: Tempo limite de execução
+        // bundling: Configurações de minificação e source map
         // minify: Minifica o código
         // sourceMap: Gera um arquivo de source map
         this.productsFetchHandler = new lambdaNodeJs.NodejsFunction(this, "ProductsFetchFunction", {
+            runtime: lambda.Runtime.NODEJS_16_X,
             functionName: "ProductsFetchFunction",
             entry: "lambda/products/productsFetchFunction.ts",
             handler: "handler",
