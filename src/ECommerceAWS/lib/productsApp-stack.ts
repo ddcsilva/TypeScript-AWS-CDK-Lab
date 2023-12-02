@@ -49,6 +49,8 @@ export class ProductsAppStack extends cdk.Stack {
         // bundling: Configurações de minificação e source map
         // minify: Minifica o código
         // sourceMap: Gera um arquivo de source map
+        // environment: Variáveis de ambiente
+        // PRODUCTS_TABLE_NAME: Nome da tabela DynamoDB
         this.productsFetchHandler = new lambdaNodeJs.NodejsFunction(this, "ProductsFetchFunction", {
             runtime: lambda.Runtime.NODEJS_16_X,
             functionName: "ProductsFetchFunction",
@@ -59,7 +61,13 @@ export class ProductsAppStack extends cdk.Stack {
             bundling: {
                 minify: true,
                 sourceMap: false
+            },
+            environment: {
+                PRODUCTS_TABLE_NAME: this.productsTable.tableName
             }
         });
+
+        // Permite que a função lambda leia os dados da tabela DynamoDB
+        this.productsTable.grantReadData(this.productsFetchHandler);
     }
 }
