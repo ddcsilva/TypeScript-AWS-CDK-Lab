@@ -11,8 +11,11 @@ export async function handler(event: APIGatewayProxyEvent, context: Context): Pr
     // Tracing Distribuído
     // ID da requisição
     const lambdaRequestId = context.awsRequestId;
-    // ID da requisição
     const apiRequestId = event.requestContext.requestId;
+
+    console.log(`API Gateway RequestId: ${apiRequestId}`);
+    console.log(`Lambda RequestId: ${lambdaRequestId}`);
+
     // Método HTTP da requisição
     const httpMethod = event.httpMethod;
 
