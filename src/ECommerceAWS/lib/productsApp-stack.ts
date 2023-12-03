@@ -10,6 +10,8 @@ import { PartitionKey } from "aws-cdk-lib/aws-appsync";
 export class ProductsAppStack extends cdk.Stack {
     // Atributo que armazena a função lambda
     readonly productsFetchHandler: lambdaNodeJs.NodejsFunction;
+    // Atributo que armazena a função lambda
+    readonly productsAdminHandler: lambdaNodeJs.NodejsFunction;
     // Atributo que armazena a tabela DynamoDB
     readonly productsTable: dynamodb.Table;
 
@@ -69,5 +71,24 @@ export class ProductsAppStack extends cdk.Stack {
 
         // Permite que a função lambda leia os dados da tabela DynamoDB
         this.productsTable.grantReadData(this.productsFetchHandler);
+
+        this.productsAdminHandler = new lambdaNodeJs.NodejsFunction(this, "ProductsAdminFunction", {
+            runtime: lambda.Runtime.NODEJS_16_X,
+            functionName: "ProductsAdminFunction",
+            entry: "lambda/products/productsAdminFunction.ts",
+            handler: "handler",
+            memorySize: 128,
+            timeout: cdk.Duration.seconds(5),
+            bundling: {
+                minify: true,
+                sourceMap: false
+            },
+            environment: {
+                PRODUCTS_TABLE_NAME: this.productsTable.tableName
+            }
+        });
+
+        // Permite que a função lambda leia e escreva os dados da tabela DynamoDB
+        this.productsTable.grantReadWriteData(this.productsAdminHandler);
     }
 }
