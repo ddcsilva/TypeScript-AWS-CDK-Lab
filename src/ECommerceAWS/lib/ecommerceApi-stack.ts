@@ -7,6 +7,7 @@ import { Construct } from "constructs";
 // Interface que define as propriedades da stack
 interface ECommerceApiStackProps extends cdk.StackProps {
     productsFetchHandler: lambdaNodeJs.NodejsFunction;
+    productsAdminHandler: lambdaNodeJs.NodejsFunction;
 }
 
 export class ECommerceApiStack extends cdk.Stack {
@@ -60,8 +61,29 @@ export class ECommerceApiStack extends cdk.Stack {
         // Definição do recurso de produtos (GET /products)
         const productsResource = api.root.addResource("products");
 
+        // Definição do recurso de produtos (GET /products/{id})
+        // Onde o recurso de produtos será integrado com o recurso de produtos (GET /products)
+        const productResource = productsResource.addResource("{id}");
+
         // Definição do método GET do recurso de produtos
         // Onde o método GET do recurso de produtos será integrado com a função lambda
+
+        // GET /products
         productsResource.addMethod("GET", productsFetchIntegration);
+
+        // GET /products/{id}
+        productResource.addMethod("GET", productsFetchIntegration);
+
+        // Definição do recurso de administração de produtos
+        const productsAdminIntegration = new apiGateway.LambdaIntegration(props.productsAdminHandler);
+
+        // POST /products
+        productsResource.addMethod("POST", productsAdminIntegration);
+
+        // PUT /products/{id}
+        productResource.addMethod("PUT", productsAdminIntegration);
+
+        // DELETE /products/{id}
+        productResource.addMethod("DELETE", productsAdminIntegration);
     }
 }

@@ -28,7 +28,8 @@ const productsAppStack = new ProductsAppStack(app, 'ProductsApp', {
 const ecommerceApiStack = new ECommerceApiStack(app, 'ECommerceApi', {
   env: environment,
   tags: tags,
-  productsFetchHandler: productsAppStack.productsFetchHandler
+  productsFetchHandler: productsAppStack.productsFetchHandler,
+  productsAdminHandler: productsAppStack.productsAdminHandler
 });
 
 // Definição da dependência entre as stacks
